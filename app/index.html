@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <style>
+            * {
+                box-sizing: border-box;
+                touch-action: none;
+            }
+            .col-1 {width: 8.33%;}
+            .col-2 {width: 16.66%;}
+            .col-3 {width: 25%;}
+            .col-4 {width: 33.33%;}
+            .col-5 {width: 41.66%;}
+            .col-6 {width: 50%;}
+            .col-7 {width: 58.33%;}
+            .col-8 {width: 66.66%;}
+            .col-9 {width: 75%;}
+            .col-10 {width: 83.33%;}
+            .col-11 {width: 91.66%;}
+            .col-12 {width: 100%;}
+            .row::after {
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            [class*="col-"] {
+                float: left;
+                /*border: 1px solid red;*/
+            }
+            @media screen and (orientation:portrait) {
+                #stream {
+                    width:100%
+                }
+            }
+
+            @media screen and (orientation:landscape) {
+                html, body {
+                    height: 100%;
+                    margin:0px;
+                }
+                #stream {
+                    /*display: block;
+                    max-width:640;
+                    max-height:283px;
+                    width: auto;
+                    height: auto;*/
+                }
+                canvas {
+                    background-color: lightgray;
+                }
+                
+            }
+            .fullHeight {
+                height: 100vh;
+            }
+            .column {
+                float: left;
+                width: 33.33%;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+            img {
+                
+            }
+        </style>
+        <script type="text/javascript" src="connection.js"></script>
+        <script type="text/javascript" src="script.js"></script>
+    </head>
+<body>
+    <div class="row">
+        <div class="col-3 fullHeight"><canvas id="cvsLeft"></canvas></div>
+        <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream" width="640" heigh="480"></canvas></div>
+        <div class="col-3 fullHeight"><canvas id="cvsRight"></canvas></div>
+    </div>
+<span id="txt" style="position:absolute;top:0;left:50%;color:Red"></span>
+
+<!--<canvas id="cvsRight"></canvas>-->
+<div style="display:none">
+	<h1 id="status">Not connected</h1>
+    <button id="btnConnect" onclick="connect()">Connect</button>
+    <button onmousedown="forward()" class="ctlButton">Forward</button>
+    <button onmousedown="backward()" class="ctlButton">Backward</button>
+    <button onmousedown="left()" class="ctlButton">Left</button>
+    <button onmousedown="right()" class="ctlButton">Right</button>
+    <button onmousedown="stop()" class="ctlButton">Brake</button>
+    
+    <div>
+        <div>Speed</div>
+        <input type="range" min="1" max="100" value="0" class="slider" id="speed">
+    </div>
+    <div>
+        <div>Direction</div>
+        <input type="range" min="0" max="100" value="50" step="1" class="slider" id="direction">
+    </div>
+</div>
+<script type="text/javascript">
+var socket;
+ 
+//Sends control command continuesly until stopped
+var interval = null;
+var speed = 0;
+ 
+
+ 
+
+document.addEventListener("DOMContentLoaded", function () {
+	$(".ctlButton").disable();
+    $("#direction").element.oninput = function() {
+        sendOnce("t "+this.value);
+    }
+    connect();
+});
+setupLeft()
+setupRight()
+</script>
+ 
+</body>
+</html>
