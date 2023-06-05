@@ -4,8 +4,6 @@ import RPi.GPIO as GPIO
  
 from websockets.server import serve
  
-            #await websocket.send(message)
- 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
  

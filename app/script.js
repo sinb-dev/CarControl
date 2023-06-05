@@ -119,6 +119,7 @@ function touchright(event,canvasHeight)
     var range = canvasHeight-100;
     amount = Math.max(50, Math.min(range+50, amount));
     speed = parseInt((amount - 50) / range * 100)
+    speed = Math.abs(speed-100)
     debug("Speed: "+speed)
 }
 

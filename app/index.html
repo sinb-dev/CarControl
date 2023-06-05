@@ -33,6 +33,9 @@
                 #stream {
                     width:100%
                 }
+                .horizontal {
+                    display:none;
+                }
             }
 
             @media screen and (orientation:landscape) {
@@ -50,6 +53,9 @@
                 canvas {
                     background-color: lightgray;
                 }
+                .vertical {
+                    display:none;
+                }
                 
             }
             .fullHeight {
@@ -66,18 +72,18 @@
                 display: table;
                 clear: both;
             }
-            img {
-                
-            }
         </style>
         <script type="text/javascript" src="connection.js"></script>
         <script type="text/javascript" src="script.js"></script>
     </head>
-<body>
-    <div class="row">
-        <div class="col-3 fullHeight"><canvas id="cvsLeft"></canvas></div>
-        <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream" width="640" heigh="480"></canvas></div>
-        <div class="col-3 fullHeight"><canvas id="cvsRight"></canvas></div>
+<body id="b">
+    <div class="row horizontal">
+        <div class="col-3 fullHeight" id="col1"><canvas id="cvsLeft"></canvas></div>
+        <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream" style="width:100%; max-width:640px;margin-left:auto;margin-right:auto" /></div>
+        <div class="col-3 fullHeight" id="col3"><canvas id="cvsRight"></canvas></div>
+    </div>
+    <div class="row vertical">
+        <div>Tilt the screen</div>
     </div>
 <span id="txt" style="position:absolute;top:0;left:50%;color:Red"></span>
 
@@ -107,16 +113,19 @@ var socket;
 var interval = null;
 var speed = 0;
  
-
- 
-
 document.addEventListener("DOMContentLoaded", function () {
 	$(".ctlButton").disable();
     $("#direction").element.oninput = function() {
         sendOnce("t "+this.value);
     }
     connect();
+    debug(window.innerWidth+"x"+window.innerHeight)
+    $("#b").on("click",fullscreen);
 });
+function fullscreen() {
+    this.requestFullscreen();
+}
+
 setupLeft()
 setupRight()
 </script>
