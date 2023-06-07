@@ -68,8 +68,13 @@ function touchleft(event,canvasHeight)
     var y = event.touches[0].clientY;
 
     var delta = {
-        x : x,
+        x : x - 0,
         y : y - canvasHeight
+    }
+
+    var dist = Math.sqrt(delta.x*delta.x + delta.y*delta.y);
+    if (dist < 125 || dist > 260) {
+        return;
     }
     var angle = Math.atan2(delta.y,x);
     var range = Math.PI*0.5

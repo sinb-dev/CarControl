@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="viewport" content="width=device-width"> 
         <style>
             * {
                 box-sizing: border-box;
@@ -51,7 +51,6 @@
                     height: auto;*/
                 }
                 canvas {
-                    background-color: lightgray;
                 }
                 .vertical {
                     display:none;
@@ -119,13 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
         sendOnce("t "+this.value);
     }
     connect();
-    debug(window.innerWidth+"x"+window.innerHeight)
+    
+    debug(screen.width+"x"+screen.availHeight)
     $("#b").on("click",fullscreen);
 });
 function fullscreen() {
-    this.requestFullscreen();
+    //this.requestFullscreen();
 }
-
+window.devicePixelRatio = 1;
 setupLeft()
 setupRight()
 </script>
