@@ -50,10 +50,15 @@
                     width: auto;
                     height: auto;*/
                 }
-                canvas {
+                #cvsLeft {
+                    position:absolute;
+                    bottom:0;
                 }
                 .vertical {
                     display:none;
+                }
+                #controller {
+                    position:aboslute;
                 }
                 
             }
@@ -76,7 +81,7 @@
         <script type="text/javascript" src="script.js"></script>
     </head>
 <body id="b">
-    <div class="row horizontal">
+    <div class="row horizontal" id="controller">
         <div class="col-3 fullHeight" id="col1"><canvas id="cvsLeft"></canvas></div>
         <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream" style="width:100%; max-width:640px;margin-left:auto;margin-right:auto" /></div>
         <div class="col-3 fullHeight" id="col3"><canvas id="cvsRight"></canvas></div>
@@ -122,6 +127,10 @@ document.addEventListener("DOMContentLoaded", function () {
     debug(screen.width+"x"+screen.availHeight)
     $("#b").on("click",fullscreen);
 });
+window.addEventListener("resize", () => {
+    setupLeft();
+    setupRight();
+})
 function fullscreen() {
     //this.requestFullscreen();
 }

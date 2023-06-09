@@ -44,15 +44,15 @@ function setupLeft() {
     var height = $("html").height();
     
     canvas.element.width = width*0.25
-    canvas.element.height = height;
+    canvas.element.height = height*0.5;
     console.log(canvas.element.width)
     //draw wheel
-    var cX = 0
-    var cY = height
     var lineWidth = 20;
-    ctx.beginPath()
     var radius = canvas.element.width - lineWidth
-    ctx.arc(0,height, radius, -Math.PI/2, 0)
+    var cX = 0
+    var cY = radius + lineWidth
+    ctx.beginPath()
+    ctx.arc(cX, cY, radius, -Math.PI/2, 0)
    
     ctx.lineWidth=lineWidth
     ctx.strokeStyle = "#006600"
