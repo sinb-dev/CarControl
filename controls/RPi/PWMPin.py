@@ -8,13 +8,13 @@ class PWMPin:
 
     def ChangeDutyCycle(self, amount):
         self.duty = amount
-        print("Changed duty cycle on pin "+str(self.pin)+" to "+str(self.duty))
+        #print("Changed duty cycle on pin "+str(self.pin)+" to "+str(self.duty))
         pass
 
     def start(self, amount):
-        print("Pin "+str(self.pin)+" started ")
+        #print("Pin "+str(self.pin)+" started ")
         pass
 
     def stop(self,):
-        print("Pin "+str(self.pin)+" stopped ")
+        #print("Pin "+str(self.pin)+" stopped ")
         pass

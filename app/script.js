@@ -1,39 +1,4 @@
-function $(selector) {
-	var r = document.querySelectorAll(selector);
- 
-	return {
-		element : r[0],
-		text(str) {
-			for (var c of r) {
-				c.innerText = str;
-			}
-		},
-		disable() {
-			for (var c of r) {
-				c.disabled = true;
-			}
-		},
-		enable() {
-			for (var c of r) {
-				c.disabled = false;
-			}
-		},
-        attr(name, value) {
-            if (r[0]) {
-                if (value !== undefined)
-                    r[0][name] = value;
-                
-                return r[0][name]
-                
-            }
-        },
-        on(event, handler) {
-            if (r[0]) r[0].addEventListener(event, handler)
-        },
-        width() { if (r[0]) return r[0].getBoundingClientRect().width },
-        height() { if (r[0]) return r[0].getBoundingClientRect().height },
-	}
-}
+
 
 function setupLeft() {
     var canvas = $("#cvsLeft")
@@ -59,6 +24,7 @@ function setupLeft() {
     ctx.stroke()
 
     canvas.on("touchmove", (event) => touchleft(event,height))
+    
 }
 
 function touchleft(event,canvasHeight) 
@@ -81,6 +47,7 @@ function touchleft(event,canvasHeight)
     angle = Math.max(-range,Math.min(0,angle));
     anglePct = parseInt((angle + range) / range * 100)
     debug("Turn: "+anglePct);
+    Commands.sendSteer(anglePct)
 }
 
 function setupRight() {
@@ -126,8 +93,81 @@ function touchright(event,canvasHeight)
     speed = parseInt((amount - 50) / range * 100)
     speed = Math.abs(speed-100)
     debug("Speed: "+speed)
+    Commands.sendDrive(speed)
 }
 
+function btnReverse_clicked() {
+    $("span.active").removeClass("active");
+    $(this).addClass("active")
+    Commands.putInReverse();
+}
+function btnForward_clicked() {
+    $("span.active").removeClass("active");
+    $(this).addClass("active")
+    Commands.putInDrive();
+}
 function debug(msg) {
 	$("#txt").text(msg)
+}
+
+function $(selector) {
+    if (typeof(selector) == "string") {
+	    var r = document.querySelectorAll(selector);
+    }
+    else if(typeof(selector) == "object") {
+        var r = [selector]
+    } else {
+        console.warn("Invalid selector")
+        return;
+    }
+ 
+	return {
+		element : r[0],
+		text(str) {
+			for (var c of r) {
+				c.innerText = str;
+			}
+		},
+		disable() {
+			for (var c of r) {
+				c.disabled = true;
+			}
+		},
+		enable() {
+			for (var c of r) {
+				c.disabled = false;
+			}
+		},
+        attr(name, value) {
+            for (var c of r) {
+                if (value !== undefined)
+                    c[name] = value;
+                
+                return this.click[name]
+            }
+        },
+        addClass(classname) {
+            for (var c of r) {
+                c.classList.add(classname)
+            }
+        },
+        removeClass(classname) {
+            for (var c of r) {
+                c.classList.remove(classname)
+            }
+        },
+        click(handler) {
+            for (var c of r) {
+                $(c).on("onclick", handler)
+                $(c).on("ontouchstart", handler)
+            }
+        },
+        on(event, handler) {
+            for (var c of r) {
+                if (c) c.addEventListener(event, handler)
+            }
+        },
+        width() { if (r[0]) return r[0].getBoundingClientRect().width },
+        height() { if (r[0]) return r[0].getBoundingClientRect().height },
+	}
 }

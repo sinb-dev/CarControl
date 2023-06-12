@@ -1,12 +1,16 @@
 #/usr/bin/python3
 import asyncio
 import RPi.GPIO as GPIO
- 
+from threading import Thread
+import time
+import datetime
 from websockets.server import serve
  
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
  
+AUTOBRAKEINTERVAL = 100
+
 #Motor
 speedPin = 23
 in1 = 24
@@ -23,28 +27,54 @@ servoMinValue = 6#2.5
 servoStep = (servoMaxValue - servoMinValue) / 100
 GPIO.setup(servoPin, GPIO.OUT)
 pwmServo = GPIO.PWM(servoPin,50)
- 
+
+
+isInReverse = False
+'''
+command examples            arguments
+steer [direction]           direction: Number between 0 and 100 where 50 means straight forward
+drive [speed]               speed: Number between 0 and 100 where 100 is full speed. Drive forward for 100 msec
+brake                       brake the vehicle
+reverse                     put gear in reverse
+forward                     put gear in drive
+'''
+
+def steer_command(args):
+    direction = get_arg_val_or_default(args, 1, 50, "Missing direction from steer command")
+    turn(direction)
+
+def drive_command(args):
+    speed = get_arg_val_or_default(args, 1, 0, "Missing speed for the drive command")
+    drive(speed)
+def brake_command(args):
+    brake()
+def reverse_command(args):
+    put_gear_in_reserve()
+def forward_command(args):
+    put_gear_in_drive()
+
+commands = {
+    "steer" : steer_command,
+    "drive" : drive_command,
+    "brake" : brake_command,
+    "reverse" : reverse_command,
+    "forward" : forward_command
+}
 async def echo(websocket):
     async for message in websocket:
         args = message.split(" ")
-        cmd = args[0];
-        if len(args) > 1:
-            arg1 = args[1];
- 
-        if cmd == "n":
-            speed = getspeed(arg1)
-            forward(speed)
-        elif cmd == "s":
-            speed = getspeed(arg1)
-            backward(speed)
-        elif cmd == "b":
-            brake();
-        elif cmd == "t":
-            rotation_amount = get_rotation_amount(args[1]);
-            turn(rotation_amount);
-        if len(args) > 2:
-            rotation_amount = get_rotation_amount(args[2]);
-            turn(rotation_amount);
+        command = args[0]
+        if command in commands:
+            commands[command](args);
+        
+
+def get_arg_val_or_default(args, index, default, message):
+    if (len(args) <= index):
+        print(message)
+        return default
+    else:
+        return args[index]
+
  
  
 def setupGPIO():
@@ -62,32 +92,47 @@ def get_rotation_amount(string):
     return clamp(amount, 0, 100)
  
 def get_pwm_angle(amount):
- 
+    amount = int(amount)
     return amount * servoStep + servoMinValue
  
 def clamp(num, minimum, maximum):
     return max(minimum, min(maximum, num))
  
 def turn(degrees):
+    degrees = get_rotation_amount(degrees)
     pwmServo.ChangeDutyCycle(get_pwm_angle(degrees))
  
 def brake():
-    print("forward")
+    print("braking")
     GPIO.output(in1,GPIO.LOW)
     GPIO.output(in2,GPIO.LOW)
  
-def forward(speed):
+def drive(speed):
     print("forward "+str(speed))
+    pwmSpeed.ChangeDutyCycle(speed)
+    autoBrakeWhen = datetime.datetime.now() + datetime.timedelta(microseconds=AUTOBRAKEINTERVAL);
+
+def put_gear_in_reverse():
+    print("Gear in reverse")
     GPIO.output(in1,GPIO.HIGH)
     GPIO.output(in2,GPIO.LOW)
-    pwmSpeed.ChangeDutyCycle(speed)
- 
-def backward(speed):
-    print("backward"+str(speed))
+
+def put_gear_in_drive():
+    print("Gear in drive")
     GPIO.output(in1,GPIO.LOW)
     GPIO.output(in2,GPIO.HIGH)
-    pwmSpeed.ChangeDutyCycle(speed)
  
+def auto_brake():
+    while True:
+        time.sleep(0.1);
+        if (autoBrakeWhen <= datetime.datetime.now()):
+            brake()
+        else:
+            print(autoBrakeWhen)
+autoBrakeWhen = datetime.datetime.now()
+autoBrakeThread = Thread(target=auto_brake)
+autoBrakeThread.start();
+
 async def main():
     setupGPIO()   
     async with serve(echo, "0.0.0.0", 8888):
@@ -96,4 +141,6 @@ async def main():
  
 if __name__ == '__main__':
     print("starting server")
+    currently = datetime.datetime.now();
+    print(str(currently))
     asyncio.run(main())

@@ -12,8 +12,8 @@ def PWM(pin, frequency):
     return PWMPin(pin, frequency);
 
 def output(pin, amount):
-    print("Output "+str(amount)+" on pin "+str(pin))
-
+    #print("Output "+str(amount)+" on pin "+str(pin))
+    pass
 
 OUT = 2
 LOW = 1

@@ -1,6 +1,6 @@
 function connect()
 {
-	socket = new WebSocket("ws://10.0.0.158:8888")
+	socket = new WebSocket("ws://10.0.0.155:8888")
 	console.log("connecting");
  
 	socket.addEventListener("open", onconnected);
@@ -20,27 +20,43 @@ function sendContinuosly(command)
 		clearInterval(interval);
 	interval = setInterval(() => {
 		socket.send(command+" "+$("#speed").element.value+" "+$("#direction").element.value);
-	},100);
+	},50);
 }
 function sendOnce(command)
 {
 	socket.send(command)
 }
-function forward()
-{
-	sendContinuosly("n");
-}
-function backward()
-{
-	sendContinuosly("s");
-}
-function left()
-{
-	sendContinuosly("l");
-}
-function right()
-{
-	sendContinuosly("r");
+
+/*"steer" : steer_command,
+"drive" : drive_command,
+"brake" : brake_command,
+"reverse" : reverse_command,
+"forward" : forward_command*/
+const Commands = {
+	sendSteer(direction) {
+		var command = `steer ${direction}`
+		sendOnce(command)
+	}, 
+	sendDrive(speed) {
+		var command = `drive ${speed}`
+		sendContinuosly(command);
+	},
+	putInReverse() {
+		var command = `reverse`
+		sendOnce(command)
+	},
+	brake() {
+		var command = `brake`
+		sendOnce(command);
+	},
+	putInReverse() {
+		var command = `reverse`
+		sendOnce(command)
+	},
+	putInDrive() {
+		var command = `forward`
+		sendOnce(command)
+	}
 }
 function status(message)
 {
