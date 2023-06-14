@@ -1,29 +1,26 @@
-function connect()
-{
-	socket = new WebSocket("ws://10.0.0.155:8888")
+const HOST = "192.168.54.223"
+function connect() {
+	socket = new WebSocket("ws://" + HOST + ":8888")
 	console.log("connecting");
- 
+
 	socket.addEventListener("open", onconnected);
- 
+
 	socket.addEventListener("close", onclosed);
 }
-function stop()
-{
+function stop() {
 	clearInterval(interval);
 	sendOnce();
 }
- 
- 
-function sendContinuosly(command)
-{
+
+
+function sendContinuosly(command) {
 	if (interval != null)
 		clearInterval(interval);
 	interval = setInterval(() => {
-		socket.send(command+" "+$("#speed").element.value+" "+$("#direction").element.value);
-	},50);
+		socket.send(command + " " + $("#speed").element.value + " " + $("#direction").element.value);
+	}, 50);
 }
-function sendOnce(command)
-{
+function sendOnce(command) {
 	socket.send(command)
 }
 
@@ -36,10 +33,10 @@ const Commands = {
 	sendSteer(direction) {
 		var command = `steer ${direction}`
 		sendOnce(command)
-	}, 
+	},
 	sendDrive(speed) {
 		var command = `drive ${speed}`
-		sendContinuosly(command);
+		sendOnce(command);
 	},
 	putInReverse() {
 		var command = `reverse`
@@ -58,23 +55,22 @@ const Commands = {
 		sendOnce(command)
 	}
 }
-function status(message)
-{
+function status(message) {
 	$("#status").text(message)
 }
- 
+
 function onconnected() {
-    console.log("Connected to control software")
+	console.log("Connected to control software")
 	status("Connected")
 	$("#btnConnect").disable();
 	$(".ctlButton").enable();
-    $("#stream").attr("src","http://10.0.0.158:9001");
-    
+	$("#stream").attr("src", "http://" + HOST + ":9001");
+
 }
 function onclosed() {
-    console.log("Disconnected from control software")
+	console.log("Disconnected from control software")
 	status("Disconnected")
 	$("#btnConnect").enable();
 	$(".ctlButton").disable();
-    $("#stream").attr("src","stream.jpg");
+	$("#stream").attr("src", "stream.jpg");
 }
