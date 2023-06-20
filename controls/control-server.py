@@ -61,6 +61,7 @@ def steer_command(args):
     direction = get_arg_val_or_default(
         args, 1, 50, "Missing direction from steer command"
     )
+    print("Turn " + str(direction))
     turn(direction)
 
 
@@ -96,6 +97,8 @@ async def echo(websocket):
         command = args[0]
         if command in commands:
             commands[command](args)
+        else:
+            print("Unknown command " + command)
 
 
 def get_arg_val_or_default(args, index, default, message):
@@ -134,6 +137,7 @@ def clamp(num, minimum, maximum):
 
 def turn(degrees):
     degrees = get_rotation_amount(degrees)
+    print("Turn" + str(degrees))
     pwmServo.ChangeDutyCycle(get_pwm_angle(degrees))
 
 
