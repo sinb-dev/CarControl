@@ -28,7 +28,7 @@ function setupLeft() {
 }
 
 function touchleft(event, canvasHeight) {
-    console.log("!");
+
     if (event.touches.length == 0) return;
     var x = event.touches[0].clientX;
     var y = event.touches[0].clientY;
@@ -73,7 +73,10 @@ function setupRight() {
     ctx.strokeStyle = "#006600"
     ctx.stroke()
 
-    canvas.on("touchmove", (event) => touchright(event, height))
+    canvas.on("touchmove", (event) => touchright(event, height));
+    canvas.on("touchend", (event) => Commands.brake());//
+
+
 }
 function touchright(event, canvasHeight) {
     if (event.touches.length == 0) return;
@@ -157,8 +160,8 @@ function $(selector) {
         },
         click(handler) {
             for (var c of r) {
-                $(c).on("onclick", handler)
-                $(c).on("ontouchstart", handler)
+                $(c).on("click", handler)
+                $(c).on("touchstart", handler)
             }
         },
         on(event, handler) {
@@ -168,5 +171,15 @@ function $(selector) {
         },
         width() { if (r[0]) return r[0].getBoundingClientRect().width },
         height() { if (r[0]) return r[0].getBoundingClientRect().height },
+        hide() {
+            for (var c of r) {
+                if (c) c.style.display = "none";
+            }
+        },
+        show() {
+            for (var c of r) {
+                if (c) c.style.display = "";
+            }
+        },
     }
 }

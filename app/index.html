@@ -1,183 +1,266 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width"> 
-        <style>
-            * {
-                box-sizing: border-box;
-                touch-action: none;
-            }
-            .col-1 {width: 8.33%;}
-            .col-2 {width: 16.66%;}
-            .col-3 {width: 25%;}
-            .col-4 {width: 33.33%;}
-            .col-5 {width: 41.66%;}
-            .col-6 {width: 50%;}
-            .col-7 {width: 58.33%;}
-            .col-8 {width: 66.66%;}
-            .col-9 {width: 75%;}
-            .col-10 {width: 83.33%;}
-            .col-11 {width: 91.66%;}
-            .col-12 {width: 100%;}
-            .row::after {
-                content: "";
-                clear: both;
-                display: table;
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <style>
+        * {
+            box-sizing: border-box;
+            touch-action: none;
+        }
+
+        .col-1 {
+            width: 8.33%;
+        }
+
+        .col-2 {
+            width: 16.66%;
+        }
+
+        .col-3 {
+            width: 25%;
+        }
+
+        .col-4 {
+            width: 33.33%;
+        }
+
+        .col-5 {
+            width: 41.66%;
+        }
+
+        .col-6 {
+            width: 50%;
+        }
+
+        .col-7 {
+            width: 58.33%;
+        }
+
+        .col-8 {
+            width: 66.66%;
+        }
+
+        .col-9 {
+            width: 75%;
+        }
+
+        .col-10 {
+            width: 83.33%;
+        }
+
+        .col-11 {
+            width: 91.66%;
+        }
+
+        .col-12 {
+            width: 100%;
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        [class*="col-"] {
+            float: left;
+            /*border: 1px solid red;*/
+        }
+
+        @media screen and (orientation:portrait) {
+            #stream {
+                width: 100%
             }
 
-            [class*="col-"] {
-                float: left;
-                /*border: 1px solid red;*/
+            .horizontal {
+                display: none;
             }
-            @media screen and (orientation:portrait) {
-                #stream {
-                    width:100%
-                }
-                .horizontal {
-                    display:none;
-                }
+        }
+
+        @media screen and (orientation:landscape) {
+
+            html,
+            body {
+                height: 100%;
+                margin: 0px;
             }
 
-            @media screen and (orientation:landscape) {
-                html, body {
-                    height: 100%;
-                    margin:0px;
-                }
-                #stream {
-                    /*display: block;
+            #stream {
+                /*display: block;
                     max-width:640;
                     max-height:283px;
                     width: auto;
                     height: auto;*/
-                }
-                #cvsLeft {
-                    position:absolute;
-                    bottom:0;
-                }
-                .vertical {
-                    display:none;
-                }
-                #controller {
-                    position:aboslute;
-                }
-                
-            }
-            .fullHeight {
-                height: 100vh;
-            }
-            .column {
-                float: left;
-                width: 33.33%;
             }
 
-            /* Clear floats after the columns */
-            .row:after {
-                content: "";
-                display: table;
-                clear: both;
+            #cvsLeft {
+                position: absolute;
+                bottom: 0;
             }
-            .gear {
-                font-size: 10vh;
-                
+
+            .vertical {
+                display: none;
             }
-            .gear span {
-                display: inline-block;
-                margin-top:auto;
-                margin-bottom:auto;
-                text-align:center;
-                font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-                color: gray;
+
+            #controller {
+                position: aboslute;
             }
-            .gear .reverse span, .gear .forward span {
-                background: lightgray;
-                border: 3px lightgray solid;
-                padding-left:5vh;
-                padding-right:5vh;
-                cursor:pointer;
-            }
-            .gear .reverse .active  {
-                color: red;
-                background: white;
-            }   
-            .gear .forward .active {
-                color:darkturquoise;
-                background: white;
-            }   
-        </style>
-        <script type="text/javascript" src="connection.js"></script>
-        <script type="text/javascript" src="script.js"></script>
-    </head>
+
+        }
+
+        .fullHeight {
+            height: 100vh;
+        }
+
+        .column {
+            float: left;
+            width: 33.33%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .gear {
+            font-size: 10vh;
+        }
+
+        .gear span,
+        .connection span {
+            display: inline-block;
+            margin-top: auto;
+            margin-bottom: auto;
+            text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: gray;
+        }
+
+
+        .gear .reverse span,
+        .gear .forward span {
+            background: lightgray;
+            border: 3px lightgray solid;
+            padding-left: 5vh;
+            padding-right: 5vh;
+            cursor: pointer;
+        }
+
+        .gear .forward span {
+            border-radius: 0vh 2vh 2vh 0vh;
+        }
+
+        .gear .reverse span {
+            border-radius: 2vh 0vh 0vh 2vh;
+        }
+
+        .gear .reverse .active {
+            color: red;
+            background: white;
+        }
+
+        .gear .forward .active {
+            color: darkturquoise;
+            background: white;
+
+        }
+
+        .connect {
+            background: lightgray;
+            border: 3px lightgray solid;
+            padding-right: 2vh;
+            border-radius: 2vh;
+        }
+
+        .connection .icon {
+            font-size: 5vh;
+            padding: 2vh;
+        }
+
+        .connection .label {
+            background: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2vh;
+            margin-left: 1vh;
+            border-radius: 1vh;
+            font-weight: bold;
+            font-size: 5vh;
+        }
+
+        #btnConnect {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="connection.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
 <body id="b">
     <div class="row horizontal" id="controller">
         <div class="col-3 fullHeight" id="col1">
-            <div class="gear">
+            <div class="connection" style="display:none" id="btnConnect" onclick="connect()">
+                <span class="connect">
+                    <span class="icon">
+                        🔌
+                    </span><span class="label">Connect</span>
+                </span>
+            </div>
+            <div class="gear" style="display:none" id="btnGear">
                 <span class="reverse">
-                    <span id="btnReverse" class="active">R</span>
+                    <span id="btnReverse" class="">R</span>
                 </span><span class="forward">
-                    <span id="btnForward" class="">D</span>
+                    <span id="btnForward" class="active">D</span>
                 </span>
             </div>
             <canvas id="cvsLeft"></canvas>
         </div>
-        <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream" style="width:100%; max-width:640px;margin-left:auto;margin-right:auto" /></div>
+        <div class="col-6 fullHeight" style="display:flex;align-items: center;"><img id="stream"
+                style="width:100%; max-width:640px;margin-left:auto;margin-right:auto" /></div>
         <div class="col-3 fullHeight" id="col3"><canvas id="cvsRight"></canvas></div>
     </div>
     <div class="row vertical">
         <div>Tilt the screen</div>
     </div>
-<span id="txt" style="position:absolute;top:0;left:50%;color:Red"></span>
+    <span id="txt" style="position:absolute;top:10vh;left:50%;color:Red"></span>
 
-<!--<canvas id="cvsRight"></canvas>-->
-<div style="display:none">
-	<h1 id="status">Not connected</h1>
-    <button id="btnConnect" onclick="connect()">Connect</button>
-    <button onmousedown="forward()" class="ctlButton">Forward</button>
-    <button onmousedown="backward()" class="ctlButton">Backward</button>
-    <button onmousedown="left()" class="ctlButton">Left</button>
-    <button onmousedown="right()" class="ctlButton">Right</button>
-    <button onmousedown="stop()" class="ctlButton">Brake</button>
-    
-    <div>
-        <div>Speed</div>
-        <input type="range" min="1" max="100" value="0" class="slider" id="speed">
-    </div>
-    <div>
-        <div>Direction</div>
-        <input type="range" min="0" max="100" value="50" step="1" class="slider" id="direction">
-    </div>
-</div>
-<script type="text/javascript">
-var socket;
- 
-//Sends control command continuesly until stopped
-var interval = null;
-var speed = 0;
+    <script type="text/javascript">
+        var socket;
 
+        //Sends control command continuesly until stopped
+        var interval = null;
+        var speed = 0;
 
+        document.addEventListener("DOMContentLoaded", function () {
+            $(".ctlButton").disable();
+            /*$("#direction").element.oninput = function () {
+                sendOnce("t " + this.value);
+            }*/
+            /*$("#btnForward").on("click", btnForward_clicked)
+            $("#btnReverse").on("click", btnReverse_clicked)*/
+            $("#btnForward").click(btnForward_clicked);
+            $("#btnReverse").click(btnReverse_clicked);
+            connect();
 
-document.addEventListener("DOMContentLoaded", function () {
-	$(".ctlButton").disable();
-    $("#direction").element.oninput = function() {
-        sendOnce("t "+this.value);
-    }
-    $("#btnForward").on("click", btnForward_clicked)
-    $("#btnReverse").on("click", btnReverse_clicked)
-    connect();
-    
-    debug(screen.width+"x"+screen.availHeight)
-    $("#b").on("click",fullscreen);
-});
-window.addEventListener("resize", () => {
-    setupLeft();
-    setupRight();
-})
-function fullscreen() {
-    //this.requestFullscreen();
-}
-window.devicePixelRatio = 1;
-setupLeft()
-setupRight()
-</script>
- 
+            debug(screen.width + "x" + screen.availHeight)
+
+            $("#b").on("click", fullscreen);
+        });
+        window.addEventListener("resize", () => {
+            setupLeft();
+            setupRight();
+        })
+        function fullscreen() {
+            //this.requestFullscreen();
+        }
+        window.devicePixelRatio = 1;
+        setupLeft()
+        setupRight()
+    </script>
+
 </body>
+
 </html>

@@ -1,7 +1,12 @@
-const HOST = "192.168.54.223"
+const DEBUG = false;
+const HOST = !DEBUG ? "192.168.54.223" : "127.0.0.1";
+
+let _connecting = false;
 function connect() {
-	socket = new WebSocket("ws://" + HOST + ":8888")
+	if (_connecting) return;
+	_connecting = true;
 	console.log("connecting");
+	socket = new WebSocket("ws://" + HOST + ":8888")
 
 	socket.addEventListener("open", onconnected);
 
@@ -16,8 +21,10 @@ function stop() {
 function sendContinuosly(command) {
 	if (interval != null)
 		clearInterval(interval);
+	sendOnce(command)
 	interval = setInterval(() => {
-		socket.send(command + " " + $("#speed").element.value + " " + $("#direction").element.value);
+		sendOnce(command)
+		console.log(command)
 	}, 50);
 }
 function sendOnce(command) {
@@ -36,7 +43,7 @@ const Commands = {
 	},
 	sendDrive(speed) {
 		var command = `drive ${speed}`
-		sendOnce(command);
+		sendContinuosly(command);
 	},
 	putInReverse() {
 		var command = `reverse`
@@ -45,6 +52,9 @@ const Commands = {
 	brake() {
 		var command = `brake`
 		sendOnce(command);
+		console.log("!");
+		if (interval != null)
+			clearInterval(interval);
 	},
 	putInReverse() {
 		var command = `reverse`
@@ -62,15 +72,19 @@ function status(message) {
 function onconnected() {
 	console.log("Connected to control software")
 	status("Connected")
-	$("#btnConnect").disable();
+	$("#btnConnect").hide();
+	$("#btnGear").show();
 	$(".ctlButton").enable();
 	$("#stream").attr("src", "http://" + HOST + ":9001");
+	_connecting = false;
 
 }
 function onclosed() {
 	console.log("Disconnected from control software")
 	status("Disconnected")
-	$("#btnConnect").enable();
+	$("#btnConnect").show();
+	$("#btnGear").hide();
 	$(".ctlButton").disable();
 	$("#stream").attr("src", "stream.jpg");
+	_connecting = false;
 }

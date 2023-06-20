@@ -3,3 +3,4 @@ backup
 package-lock.json
 .blend1
 __pycache__
+.vscode
