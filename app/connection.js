@@ -1,5 +1,5 @@
 const DEBUG = false;
-const HOST = !DEBUG ? "192.168.1.26" : "127.0.0.1";
+const HOST = !DEBUG ? "192.168.1.106" : "127.0.0.1";
 
 let _connecting = false;
 function connect() {
