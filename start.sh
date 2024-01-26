@@ -9,7 +9,7 @@ function stop() {
 
 trap stop SIGINT
 
-python controls/control-server.py &
+python3 controls/control-server.py &
 PYTHON_PID=$!
 
 node streaming/stream-server.js
